@@ -1,5 +1,9 @@
 import React from "react";
 import ReactDom from "react-dom";
+import PathComponent from "components/core/pathComponent";
+import ContextComponent from "components/core/contextcomponent";
+import LinkToWrapper from "components/core/linktowrapper";
+import ContextProvider from "components/core/contextprovider";
 class App extends ContextComponent {
   render() {
     return (

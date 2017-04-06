@@ -8,7 +8,7 @@ function ContextProvider(Wrapped, valueResolver){
                 return  observer(class ContextProvider extends Component{
                                 constructor(){
                                     super();
-                                    this.state={}                             
+                                    this.state={}                          
                                     this.constructor.displayName = `ContextProvider_${Wrapped.name}`;
                                     this.observerFn.bind(this);
                                 }
@@ -19,11 +19,12 @@ function ContextProvider(Wrapped, valueResolver){
                                   this.disposer();
                                 }
                                 observerFn(){
-                                    
                                     let {context, mapContextToProps, params} = this.props,
                                     mappedProps = mapContextToProps?mapContextToProps(context,params):{},
-                                    mergedProps = _.assign({}, Wrapped.defaultProps, mappedProps),
-                                    wrappedComponentProps = {"props" : mergedProps, "contextAvailable" : true};
+                                    mergedProps = _.assign({}, Wrapped.defaultProps, mappedProps);
+                                    if(Wrapped.name=="RepeatableView")
+                                        mergedProps = _.assign({},mergedProps,{context,params} );
+                                    let wrappedComponentProps = {"props" : mergedProps, "contextAvailable" : true};
                                 
                                     this.setState(wrappedComponentProps);
                                 }
@@ -39,6 +40,11 @@ function ContextProvider(Wrapped, valueResolver){
                                      if(this.props.onClick)
                                         this.props.onClick(context,params);
                                 }
+                                onSelectionChanged(key,item,items){
+                                     let {context,params}=this.props;
+                                     if(this.props.onSelectionChanged)
+                                     this.props.onSelectionChanged (context,params,key,item,items);
+                                }
                                 render(){
                                     if (!this.state.contextAvailable){
                                         return null;
@@ -46,6 +52,7 @@ function ContextProvider(Wrapped, valueResolver){
                                     return (<Wrapped {...this.state.props} 
                                                 onChange={this.onChange.bind(this)}
                                                 onClick={this.onClick.bind(this)} 
+                                                onSelectionChanged={this.onSelectionChanged.bind(this)} 
                                                 >
                                                 {this.props.children}</Wrapped>);
                                 }

@@ -5,7 +5,6 @@ import ContextProvider from 'components/core/contextprovider';
 
 class ButtonContol extends PureComponent{
                 render(){
-                   
                     return <Button key="b" onClick={()=>{this.props.onClick()}}
 
                                   {...this.props} >{this.props.text} </Button>        

@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import {observer} from 'mobx-react';
 import {autorun} from 'mobx';
 import R from 'ramda';
+import globals from "components/app/globals";
 import { Button, FormGroup, ControlLabel, FormControl, Label} from 'react-bootstrap';
 
 function ContextProvider(Wrapped, valueResolver){
@@ -33,12 +34,12 @@ function ContextProvider(Wrapped, valueResolver){
                                      let value= valueResolver(changePayload);
                                      let {context,params}=this.props;
                                      if(this.props.onChange)
-                                        this.props.onChange(context,params,value);
+                                        this.props.onChange(context,globals,params,value);
                                 }
                                  onClick(){
                                      let {context,params}=this.props;
                                      if(this.props.onClick)
-                                        this.props.onClick(context,params);
+                                        this.props.onClick(context,globals,params);
                                 }
                                 onSelectionChanged(key,item,items){
                                      let {context,params}=this.props;

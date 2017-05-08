@@ -32,7 +32,8 @@ class Iterator {
 
 class List extends Iterator {
     constructor(DS,item_Key){
-      super(DS,item_Key)
+      super(DS,item_Key);
+    
        extendObservable(this,{
           items:[],
           index:null,
@@ -43,7 +44,7 @@ class List extends Iterator {
           }),
           init:action(function(DS,item_Key){
             this.items=DS;
-            this.index=(item_Key!=""&&item_Key!=null)?item_Key:-1;
+            this.index=(item_Key!=""&&item_Key!=null)?item_Key:0;
             this.iemKey=this.index;
             
             this.item=this.items[this.iemKey];
@@ -81,13 +82,15 @@ class List extends Iterator {
           delete:action(function(){
             this.items.splice(this.index,1);
           })
-       })
+       });
+         this.init(DS,item_Key);
   }
 }
 
 class Map extends Iterator {
   constructor(DS,item_Key){
-      super(DS,item_Key)
+      super(DS,item_Key);
+    
        extendObservable(this,{
             items:{},
             index:null,
@@ -102,7 +105,7 @@ class Map extends Iterator {
               this.dsMapKeys=_.keys(this.items);
               this.index=(item_Key!=""&&item_Key!=null)
                             ?_.indexOf(this.dsMapKeys, item_Key)
-                            :-1;
+                            :0;
             
               this.iemKey=this.dsMapKeys[this.index]; 
               this.item=isObservable(this.items[this.iemKey])?this.items[this.iemKey]:observable(this.items[this.iemKey]);
@@ -141,7 +144,8 @@ class Map extends Iterator {
               this.dsMapKeys.splice(this.index,1);
               delete this.items[this.iemKey];
             })
-       })
+       });
+         this.init(DS,item_Key);
   }
 }
 
@@ -161,12 +165,3 @@ module.exports={DS}
 
 
 
-[
-  {update:{itemKey:"keyofitem",fieldKey:"Name of field", value:"changed value"}},
-  {update:{itemKey:"emp1",fieldKey:"name", value:"jack"}},
-  {update:{itemKey:"emp1",fieldKey:"name", value:"demon"}},
-  {update:{itemKey:"emp2",fieldKey:"empId", value:2}},
-  {update:{itemKey:"emp1",fieldKey:"phone number", value:965710}},
-  {delete:{itemKey:"emp1"}},
-  {delete:{itemKey:"emp2"}}
-]

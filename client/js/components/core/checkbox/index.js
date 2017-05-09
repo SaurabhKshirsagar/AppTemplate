@@ -9,7 +9,6 @@ class CheckboxComp extends PureComponent{
 
 
                 render(){
-                    debugger;
                     //let {params} = this.props,
                     return <Checkbox onClick={()=>{this.props.onClick()}}
                                 onChange={this.props.onChange} 

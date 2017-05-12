@@ -2,20 +2,39 @@ import _ from "lodash";
 import { extendObservable, observable, action, isObservable, toJS } from "mobx";
 import { Type, types, onPatch, applyPatch } from "mobx-state-tree";
 
-let getItemModel = function(item, schema) {
-  let defaultitem = {};
-  _.forOwn(schema, function(value, key) {
-    defaultitem[key] = value.defaultVal;
-  });
-  return types.model("item", defaultitem).create(toJS(item));
-};
-let getDefaultNewItem = function(schema) {
+window.toJS=toJS;
+let getItemsModel = function(DS) {
+  let defaultitem = getDefaultNewItem(this.schema);
+
+  return _.map(DS,(value,key)=>{
+     let item=types.model("item", defaultitem).create(value);
+     applyOnPatch.call(this,item);
+     return item;
+  })
+
+},
+getDefaultNewItem = function(schema) {
   let item = {};
   _.forOwn(schema, function(value, key) {
     item[key] = value.defaultVal;
   });
   return item;
+},
+applyOnPatch= function(item){
+   onPatch(item, data => {
+      let fieldKey = _.split(data.path, "/");
+      let change = {
+        update: {
+          itemKey: this.itemKey,
+          fieldKey,
+          value: data.value
+        }
+      };
+      this.changeQueue.push(change);
+    });
 };
+  
+
 
 class Iterator {
   constructor(DS, item_Key) {
@@ -26,7 +45,7 @@ class Iterator {
       }),
       getSelected: action(function() {
         if (this.index == -1) throw "No item selected";
-        return { key: this.iemKey, item: this.item };
+        return { key: this.itemKey, item: this.item };
       }),
       hasPrev: action(function() {
         return this.index > 0;
@@ -50,21 +69,25 @@ class List extends Iterator {
     extendObservable(this, {
       items: [],
       index: null,
-      iemKey: null,
+      itemKey: null,
       item: {},
       newItem: {},
+      changeQueue: [],
       isList: action(function() {
         return true;
       }),
       init: action(function(DS, schema, item_Key) {
-        this.items = DS;
-        this.schema = schema;
+          this.schema = schema;
+        this.items = getItemsModel.call(this,DS);
+      
         this.newItem = getDefaultNewItem(schema);
         this.index = item_Key != "" && item_Key != null ? item_Key : 0;
-        this.iemKey = this.index;
+        this.itemKey = this.index;
 
-        this.item = this.items[this.iemKey];
-        this.item = getItemModel(this.item, this.schema);
+        this.item = this.items[this.itemKey];
+        //getItemModel.call(this);
+
+     
       }),
       getByKey: action(function(item_Key) {
         if (item_Key >= 0 && item_Key < this.items.length)
@@ -75,33 +98,36 @@ class List extends Iterator {
         if (!this.hasNext()) throw "Data store has no next item";
 
         this.index++;
-        this.iemKey = this.index;
-        this.item = this.items[this.iemKey];
-        this.item = types.model("item", toJS(this.item)).create();
-        return { key: this.iemKey, item: this.item };
+        this.itemKey = this.index;
+        this.item = this.items[this.itemKey];
+        //getItemModel.call(this);
+
+
+        return { key: this.itemKey, item: this.item };
       }),
       hasNext: action(function() {
-        return this.index < this.items.length-1;
+        return this.index < this.items.length - 1;
       }),
       prev: action(function() {
         if (!this.hasPrev()) throw "Data store has no prev item";
 
         this.index--;
-        this.iemKey = this.index;
-        this.item = this.items[this.iemKey];
-        this.item = types.model("item", toJS(this.item)).create();
-        return { key: this.iemKey, item: this.item };
+        this.itemKey = this.index;
+        this.item = this.items[this.itemKey];
+        //getItemModel.call(this);
+
+        return { key: this.itemKey, item: this.item };
       }),
       //CRUD operations
       update: action(function(value) {
-        this.items[this.iemKey] = value;
+        this.items[this.itemKey] = value;
       }),
       delete: action(function() {
         this.items.splice(this.index, 1);
       })
     });
     this.init(DS, schema, item_Key);
-    onPatch(this.item, data => {});
+   
   }
 }
 
@@ -112,26 +138,27 @@ class Map extends Iterator {
     extendObservable(this, {
       items: {},
       index: null,
-      iemKey: null,
+      itemKey: null,
       item: {},
       dsMapKeys: [],
+      changeQueue: [],
       isMap: action(function() {
         return true;
       }),
       init: action(function(DS, schema, item_Key) {
-        this.items = DS;
         this.schema = schema;
+        this.items = getItemsModel.call(this,DS);
         this.newItem = getDefaultNewItem(schema);
         this.dsMapKeys = _.keys(this.items);
         this.index = item_Key != "" && item_Key != null
           ? _.indexOf(this.dsMapKeys, item_Key)
           : 0;
 
-        this.iemKey = this.dsMapKeys[this.index];
-        this.item = isObservable(this.items[this.iemKey])
-          ? this.items[this.iemKey]
-          : observable(this.items[this.iemKey]);
-        this.item = types.model("item", this.item).create();
+        this.itemKey = this.dsMapKeys[this.index];
+        this.item = isObservable(this.items[this.itemKey])
+          ? this.items[this.itemKey]
+          : observable(this.items[this.itemKey]);
+       // this.item = types.model("item", this.item).create();
       }),
       getByKey: action(function(item_Key) {
         if (this.items[item_Key]);
@@ -141,10 +168,10 @@ class Map extends Iterator {
         if (!this.hasNext()) throw "Data store has no next item";
 
         this.index++;
-        this.iemKey = this.dsMapKeys[this.index];
-        this.item = this.items[this.iemKey];
-        this.item = types.model("item", this.item).create();
-        return { key: this.iemKey, item: this.item };
+        this.itemKey = this.dsMapKeys[this.index];
+        this.item = this.items[this.itemKey];
+       // this.item = types.model("item", this.item).create();
+        return { key: this.itemKey, item: this.item };
       }),
       hasNext: action(function() {
         return this.index < this.dsMapKeys.length;
@@ -153,23 +180,26 @@ class Map extends Iterator {
         if (!this.hasPrev()) throw "Data store has no prev item";
 
         this.index--;
-        this.iemKey = this.dsMapKeys[this.index];
-        this.item = this.items[this.iemKey];
-        this.item = types.model("item", this.item).create();
-        return { key: this.iemKey, item: this.item };
+        this.itemKey = this.dsMapKeys[this.index];
+        this.item = this.items[this.itemKey];
+        //this.item = types.model("item", this.item).create();
+        return { key: this.itemKey, item: this.item };
       }),
       //CRUD operations
+      create:action(function(newItem){
+       // this
+      }),
       update: action(function(value) {
-        this.items[this.iemKey] = value;
+        this.items[this.itemKey] = value;
       }),
       delete: action(function() {
         this.dsMapKeys.splice(this.index, 1);
-        delete this.items[this.iemKey];
+        delete this.items[this.itemKey];
       })
     });
     this.init(DS, schema, item_Key);
+
     onPatch(this.item, data => {
-      debugger;
     });
   }
 }

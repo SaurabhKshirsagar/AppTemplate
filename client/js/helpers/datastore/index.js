@@ -174,7 +174,7 @@ class Map extends Iterator {
         return { key: this.itemKey, item: this.item };
       }),
       hasNext: action(function() {
-        return this.index < this.dsMapKeys.length;
+        return this.index < this.dsMapKeys.length-1;
       }),
       prev: action(function() {
         if (!this.hasPrev()) throw "Data store has no prev item";

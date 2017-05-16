@@ -75,16 +75,16 @@ class List extends Iterator {
       isList: action(function() {
         return true;
       }),
-      init: action(function(DS, schema, item_Key) {
+      init: action(function(Adapter, schema, item_Key) {
+        let DS= Adapter.DS;
+        this.Adapter=Adapter;
         this.schema = schema;
-        this.items = getItemsModel.call(this, DS);
-
+        this.items = getItemsModel.call(this,DS);
         this.newItem = getDefaultNewItem(schema);
         this.index = item_Key != "" && item_Key != null ? item_Key : 0;
         this.itemKey = this.index;
-
         this.item = this.items[this.itemKey];
-        //getItemModel.call(this);
+       
       }),
       getByKey: action(function(item_Key) {
         if (item_Key >= 0 && item_Key < this.items.length)
@@ -93,45 +93,42 @@ class List extends Iterator {
       }),
       next: action(function() {
         if (!this.hasNext()) throw "Data store has no next item";
-
         this.index++;
         this.itemKey = this.index;
         this.item = this.items[this.itemKey];
-        //getItemModel.call(this);
-
         return { key: this.itemKey, item: this.item };
       }),
       hasNext: action(function() {
-        return this.index < this.items.length - 1;
+        return this.index < this.items.length-1;
       }),
       prev: action(function() {
         if (!this.hasPrev()) throw "Data store has no prev item";
-
         this.index--;
         this.itemKey = this.index;
         this.item = this.items[this.itemKey];
-        //getItemModel.call(this);
-
         return { key: this.itemKey, item: this.item };
       }),
       //CRUD operations
+       reload: action(function(key) {
+       
+        this.init(this.Adapter,this.schema,key);
+      }),
       create: action(function() {
-        let { events: { preCreate, postCreate } } = this.schema;
-
-        R.composeP(
-          postCreate,
-          item => {
-            this.items.push(types.model("item", item).create(item));
-            Promise.resolve({ key: this.items.length, item: item });
-          },
-          preCreate
-        )(toJS(this.newItem));
+        this.update();
+        this.Adapter.create(this.newItem).then((adapter)=>{
+           this.reload(this.itemKey);
+        })
       }),
       update: action(function() {
-        // this.items[this.itemKey] = value;
+         this.Adapter=this.Adapter.update(this.changeQueue);
+         this.changeQueue=[];
       }),
       delete: action(function() {
-        this.items.splice(this.index, 1);
+         this.update();
+        this.Adapter.delete(this.itemKey).then((adapter)=>{
+          debugger;
+           this.reload(this.itemKey);
+        })
       })
     });
     this.init(DS, schema, item_Key);
@@ -211,7 +208,7 @@ class Map extends Iterator {
 let DS = (function() {
   return {
     of: function(ds, item_Key) {
-      if (_.isArray(ds)) return new List(ds, item_Key);
+      if (_.isArray(ds.DS)) return new List(ds, item_Key);
       return new Map(ds, item_Key);
     }
   };

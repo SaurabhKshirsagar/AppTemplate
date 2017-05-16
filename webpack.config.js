@@ -102,7 +102,8 @@ module.exports = {
             'components': path.join(__dirname,'client','js','components'),
             'images': path.join(__dirname,'client','images'),
             'actions': path.join(__dirname,'client','js','actions'),
-            'appcontext': path.join(__dirname,'client','js','appcontext')
+            'appcontext': path.join(__dirname,'client','js','appcontext'),
+            'datastore':path.join(__dirname,'client','js','datastore')
         },
         extensions: ['', '.js','.json']
     }

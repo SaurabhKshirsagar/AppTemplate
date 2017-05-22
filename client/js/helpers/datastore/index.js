@@ -12,21 +12,21 @@ import Promise from "bluebird";
 import R from "ramda";
 
 window.toJS = toJS;
-let getItemsModel = function(DS) {
-  let defaultitem = getDefaultNewItem(this.schema);
+let getItemsModel = async function(DS) {
+  let defaultitem = await getDefaultNewItem(this.schema);
   return _.map(DS, (value, key) => {
     let item = types.model("item", defaultitem).create(value);
     applyOnPatch.call(this, item);
     return item;
   });
 },
-  getDefaultNewItem = function(schema) {
+  getDefaultNewItem = async function(schema) {
     let { properties, events } = schema;
     let item = {};
     _.forOwn(properties, function(value, key) {
       item[key] = value.defaultVal;
     });
-    return events.onNew(item);
+    return await events.onNew(item);
   },
   applyOnPatch = function(item) {
     onPatch(item, data => {
@@ -71,7 +71,7 @@ class Iterator {
 class List extends Iterator {
   constructor(DS, schema, item_Key) {
     super(DS, item_Key);
-    //---------Auto update 
+    //===Auto update 
     this.changeQueue = observable.array();
     autorun(() => {
       console.log(this.changeQueue.length);
@@ -91,12 +91,12 @@ class List extends Iterator {
       isList: action(function() {
         return true;
       }),
-      init: action(function(Adapter, schema, item_Key) {
+      init: action(async function(Adapter, schema, item_Key) {
         let DS = Adapter.DS;
         this.Adapter = Adapter;
         this.schema = schema;
-        this.items = getItemsModel.call(this, DS);
-        this.newItem = getDefaultNewItem(schema);
+        this.items = await getItemsModel.call(this, DS);
+        this.newItem =await  getDefaultNewItem(schema);
         this.index = item_Key != "" && item_Key != null ? item_Key : 0;
         this.itemKey = this.index;
         this.item = this.items[this.itemKey];
@@ -127,21 +127,20 @@ class List extends Iterator {
       reload: action(function(key) {
         this.init(this.Adapter, this.schema, key);
       }),
-      create: action(function() {
+      create: action(async function() {
         if (!_.isEmpty(this.changeQueue)) throw "please save the changes";
-        this.Adapter.create(this.newItem).then(adapter => {
-          this.reload(this.itemKey);
-        });
+        let item = await this.Adapter.create(this.newItem);
+        this.reload(this.itemKey);
       }),
-      update: action(function() {
-        this.Adapter = this.Adapter.update(this.changeQueue);
+      update: action(async function() {
+       let item = await this.Adapter.update(this.changeQueue);
         this.changeQueue.clear();
       }),
-      delete: action(function() {
+      delete: action(async function() {
         if (!_.isEmpty(this.changeQueue)) throw "please save the changes";
-        this.Adapter.delete(this.itemKey).then(adapter => {
-          this.reload(this.itemKey);
-        });
+        let item = await this.Adapter.delete(this.itemKey)
+        this.reload(this.itemKey);
+      
       })
     });
 

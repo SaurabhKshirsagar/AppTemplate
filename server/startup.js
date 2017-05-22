@@ -1,3 +1,6 @@
+require("babel-core/register");
+require("babel-polyfill");
+
 var readline = require('readline'),
     webpack = require("webpack"),
     webpackConfig = require("../webpack.config.js"),

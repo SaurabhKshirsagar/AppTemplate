@@ -51,7 +51,6 @@ function ContextProvider(Wrapped, valueResolver) {
           this.props.onChange(context, globals, params, value);
       }
       onBlur(value) {
-          debugger;
         let { context, params } = this.props;
         if (this.props.onBlur)
           this.props.onBlur(context, globals, params, value);

@@ -1,5 +1,12 @@
 import _ from "lodash";
-import { extendObservable, observable, action, isObservable, toJS } from "mobx";
+import {
+  extendObservable,
+  observable,
+  action,
+  isObservable,
+  toJS,
+  autorun
+} from "mobx";
 import { Type, types, onPatch, applyPatch } from "mobx-state-tree";
 import Promise from "bluebird";
 import R from "ramda";
@@ -64,27 +71,35 @@ class Iterator {
 class List extends Iterator {
   constructor(DS, schema, item_Key) {
     super(DS, item_Key);
-
+    //---------Auto update 
+    this.changeQueue = observable.array();
+    autorun(() => {
+      console.log(this.changeQueue.length);
+      let isAuto = this.schema ? this.schema.auto : false;
+      if (isAuto) {
+        this.update();
+      }
+    });
+    //----------Observable Object
     extendObservable(this, {
       items: [],
       index: null,
       itemKey: null,
       item: {},
       newItem: {},
-      changeQueue: [],
+      schema: {},
       isList: action(function() {
         return true;
       }),
       init: action(function(Adapter, schema, item_Key) {
-        let DS= Adapter.DS;
-        this.Adapter=Adapter;
+        let DS = Adapter.DS;
+        this.Adapter = Adapter;
         this.schema = schema;
-        this.items = getItemsModel.call(this,DS);
+        this.items = getItemsModel.call(this, DS);
         this.newItem = getDefaultNewItem(schema);
         this.index = item_Key != "" && item_Key != null ? item_Key : 0;
         this.itemKey = this.index;
         this.item = this.items[this.itemKey];
-       
       }),
       getByKey: action(function(item_Key) {
         if (item_Key >= 0 && item_Key < this.items.length)
@@ -99,7 +114,7 @@ class List extends Iterator {
         return { key: this.itemKey, item: this.item };
       }),
       hasNext: action(function() {
-        return this.index < this.items.length-1;
+        return this.index < this.items.length - 1;
       }),
       prev: action(function() {
         if (!this.hasPrev()) throw "Data store has no prev item";
@@ -109,28 +124,27 @@ class List extends Iterator {
         return { key: this.itemKey, item: this.item };
       }),
       //CRUD operations
-       reload: action(function(key) {
-       
-        this.init(this.Adapter,this.schema,key);
+      reload: action(function(key) {
+        this.init(this.Adapter, this.schema, key);
       }),
       create: action(function() {
-        this.update();
-        this.Adapter.create(this.newItem).then((adapter)=>{
-           this.reload(this.itemKey);
-        })
+        if (!_.isEmpty(this.changeQueue)) throw "please save the changes";
+        this.Adapter.create(this.newItem).then(adapter => {
+          this.reload(this.itemKey);
+        });
       }),
       update: action(function() {
-         this.Adapter=this.Adapter.update(this.changeQueue);
-         this.changeQueue=[];
+        this.Adapter = this.Adapter.update(this.changeQueue);
+        this.changeQueue.clear();
       }),
       delete: action(function() {
-         this.update();
-        this.Adapter.delete(this.itemKey).then((adapter)=>{
-          debugger;
-           this.reload(this.itemKey);
-        })
+        if (!_.isEmpty(this.changeQueue)) throw "please save the changes";
+        this.Adapter.delete(this.itemKey).then(adapter => {
+          this.reload(this.itemKey);
+        });
       })
     });
+
     this.init(DS, schema, item_Key);
   }
 }

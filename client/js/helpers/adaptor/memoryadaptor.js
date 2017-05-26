@@ -2,9 +2,20 @@ import _ from "lodash";
 import R from "ramda";
 import immutable from "immutable";
 
+function Storage(){};
+Storage.prototype.setItem=function(name,value){
+  this[name]=value;
+};
+Storage.prototype.getItem=function(name){
+  return this[name];
+};
+let localStorage=new Storage();
+
 function MemoryAdapter(DS, { events }, dsName) {
   this.events = events;
   this.dsName = dsName;
+ debugger;
+
   //check in localStorage
   if (!localStorage.getItem(this.dsName)) {
     this.DS = DS;

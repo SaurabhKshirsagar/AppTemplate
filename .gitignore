@@ -22,13 +22,6 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
 
-# Android/app
-
-
-# ios
-
-
-
 # Android/IntelliJ
 #
 build/
@@ -41,6 +34,7 @@ local.properties
 #
 node_modules/
 npm-debug.log
+yarn-error.log
 
 # BUCK
 buck-out/

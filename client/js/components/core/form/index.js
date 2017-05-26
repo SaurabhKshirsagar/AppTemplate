@@ -9,16 +9,17 @@ import { navigateTo } from "actions/navigation";
 import DS from "datastore";
 import { extendObservable, observable } from "mobx";
 
-import Slide from "components/core/Slide";
-import TextBox from "components/core/TextBox";
-import Button from "components/core/Button";
-import List from "components/core/List";
+import Slide from "components/core/slide";
+import TextBox from "components/core/textbox";
+import Button from "components/core/button";
+import List from "components/core/list";
 import ListItem from "components/core/listitem";
 
 class Form extends ContextComponent {
   getContextVars() {
     let { ...context } = this.props.context;
     let { datastore, itemkey } = this.props;
+    window.DS=DS
     datastore = DS[datastore];
     return { datastore };
   }

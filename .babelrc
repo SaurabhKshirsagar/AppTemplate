@@ -3,7 +3,7 @@
 "plugins": [
       ["module-resolver", {
         "root": ["./client/js"],
-        "extensions":[".js",".android.js",".ios.js"]
+          "extensions":[".js",".android.js",".ios.js"]
       }]
     ]
 }

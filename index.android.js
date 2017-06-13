@@ -12,7 +12,7 @@ import {
   ToastAndroid
 } from "react-native";
 import App from 'components/app'
-
+console.disableYellowBox = true;
 class Root extends React.Component {
   render() {
     return (

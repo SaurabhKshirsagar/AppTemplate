@@ -11,11 +11,7 @@ import { navigateTo } from "actions/navigation";
 class ListItem extends ContextComponent {
   getContextVars() {
     let {...context} =this.props.context
-    return {context}
-  }
-  getParams(){
-    let {...params} =this.props.params
-    return {params}
+    return {...context}
   }
   render() {
     return (
@@ -23,7 +19,7 @@ class ListItem extends ContextComponent {
         {
             React.Children.map(this.props.children,
                                  (clild)=>{ 
-                                 return  React.cloneElement(clild, {context:this.props.context,params:this.props.params})
+                                 return  React.cloneElement(clild, {context:this.state.context})
                                  })
         }
      </div>

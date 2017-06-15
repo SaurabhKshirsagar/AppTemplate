@@ -58,11 +58,6 @@ class Iterator {
       }),
       reset: action(function() {
         this.init(this.items);
-      }),
-      each: action(function(callback) {
-        for (var item = this.first(); this.hasNext(); item = this.next()) {
-          callback(item);
-        }
       })
     });
   }
@@ -141,6 +136,12 @@ class List extends Iterator {
         let item = await this.Adapter.delete(this.itemKey)
         this.reload(this.itemKey);
       
+      }),
+      each: action(function(callback) {
+        for (let index = 0; index < this.items.length; index++) {
+          let item = this.items[index];
+          callback(item,index);
+        }
       })
     });
 

@@ -12,7 +12,7 @@ let repeatableViewGenerater = (
   cwrpProcessor,
   getComponentProps = () => ({}),
   renderChildWrapper = (thisRefrence, value, children) => children,
-  BaseComponent=Component
+  BaseComponent = Component
 ) => {
   return class RepeatableView extends BaseComponent {
     constructor(props) {
@@ -23,39 +23,45 @@ let repeatableViewGenerater = (
         throw `${containerType} type not  mentioned in isContainerComponent.js, please register it`;
       }
     }
-      getContextVars() {
-    let { ...context } = this.props.context;
-    let { datastore, itemkey } = this.props;
-    datastore = DS[datastore];
-    return { datastore,...context };
-  }
     componentDidMount() {
-     // super.componentDidMount();
+      //super.componentDidMount();
       if (cwrpProcessor) {
         cwrpProcessor(this, this.props);
       }
     }
     renderChildren() {
       let items = DS[this.props.datastore];
-      let childrens=[];
-     items.each((value,key) => {
+      let childrens = [];
+      debugger;
+      items.each((value, key) => {
         let { valueField, keyField, context, params } = this.props;
-        context=this.state.context;
+        context = this.state.context;
         valueField = valueField ? valueField(context, params, value) : value;
         key = keyField ? keyField(context, params, value) : key;
         let child = renderChild(this, valueField, key);
+
+        let selectedItem = this
+          ? this.state.context.datastore.itemKey == key
+          : false;
+        let childContext = { datastore: { item: valueField } };
+        // if (selectedItem)
+        //   childContext = { datastore: this.state.context.datastore };
         let childWithinWrapper = renderChildWrapper(
           this,
           valueField,
-          React.cloneElement(child),
+          React.cloneElement(child, {
+            context: childContext
+          }),
           key
         );
-         childrens.push(React.cloneElement(childWithinWrapper, {
-          key: `${key}-${this.flipKey}`
-        }));
+        childrens.push(
+          React.cloneElement(childWithinWrapper, {
+            key: `${key}-${this.flipKey}`
+          })
+        );
       });
 
-      return childrens
+      return childrens;
     }
     render() {
       let children = [];

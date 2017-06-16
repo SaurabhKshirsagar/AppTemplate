@@ -118,6 +118,12 @@ class List extends Iterator {
         this.item = this.items[this.itemKey];
         return { key: this.itemKey, item: this.item };
       }),
+        setSelected: action(function(selectedkey) {
+        this.index=selectedkey;
+        this.itemKey = selectedkey;
+        this.item = this.items[this.itemKey];
+        return { key: this.itemKey, item: this.item };
+      }),
       //CRUD operations
       reload: action(function(key) {
         this.init(this.Adapter, this.schema, key);

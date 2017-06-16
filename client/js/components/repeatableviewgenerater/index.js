@@ -24,7 +24,7 @@ let repeatableViewGenerater = (
       }
     }
     componentDidMount() {
-      //super.componentDidMount();
+      super.componentDidMount();
       if (cwrpProcessor) {
         cwrpProcessor(this, this.props);
       }

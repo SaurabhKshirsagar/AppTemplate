@@ -3,14 +3,27 @@ import repeatableViewGenerater from "components/repeatableviewgenerater";
 import ContextComponent from "components/core/contextcomponent";
 import ContextProvider from 'components/core/contextprovider';
 import DS from "datastore";
-
+import { autorun } from "mobx";
 class ListComp extends ContextComponent {
   getContextVars() {
     let { ...context } = this.props.context;
     let { datastore, itemkey } = this.props;
     datastore = DS[datastore];
-    return { datastore, dsKey:datastore.itemKey};
+    this.observerFn.bind(this);
+    return { datastore,dsKey:datastore.itemKey};
   }
+        componentDidMount() {
+        this.disposer = autorun(() => {
+          this.observerFn();
+        });
+      }
+      componentWillUnmount() {
+        this.disposer();
+      }
+      observerFn() {
+        let context= { datastore:this.state.context.datastore,dsKey:this.state.context.datastore.itemKey};
+        this.setState({context});
+      }
   
 }
 
@@ -35,6 +48,7 @@ let renderList = (thisReference, listItems) => {
     );
 },
 click = function(thisReference,key, item,ds) {
+    //thisReference.setState({key})
     thisReference.state.context.datastore.setSelected(key)
     thisReference.props.onSelectionChanged(key,item,ds)
 },

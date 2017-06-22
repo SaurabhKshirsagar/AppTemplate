@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDom from "react-dom";
 import PathComponent from "components/core/pathComponent";
-import ContextComponent from "components/core/contextcomponent";
+import ContextOwner from "components/core/contextowner";
 import LinkToWrapper from "components/core/linktowrapper";
-import ContextProvider from "components/core/contextprovider";
+import ContextConsumer from "components/core/contextconsumer";
 import {ReactHistory, getContext} from "components/reacthistory";
 import $globals from "components/app/globals";
 
@@ -19,7 +19,7 @@ import Area_2 from "components/app/areas/Area_2";
 
 
 
-class App extends ContextComponent {
+class App extends ContextOwner {
     openDrawer() {
         this._drawer.open();
     }
@@ -110,4 +110,4 @@ class App extends ContextComponent {
     }
 }
 
-export default ContextProvider(App);
+export default ContextConsumer(App);

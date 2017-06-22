@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDom from "react-dom";
 import PathComponent from "components/core/pathComponent";
-import ContextComponent from "components/core/contextcomponent";
+import ContextOwner from "components/core/contextowner";
 import LinkToWrapper from "components/core/linktowrapper";
-import ContextProvider from "components/core/contextprovider";
-class App extends ContextComponent {
+import ContextConsumer from "components/core/contextconsumer";
+class App extends ContextOwner {
   render() {
     return (
       <div>
@@ -26,4 +26,4 @@ class App extends ContextComponent {
     );
   }
 }
-export default ContextProvider(App)
+export default ContextConsumer(App)

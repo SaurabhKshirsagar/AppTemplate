@@ -6,7 +6,7 @@ import {
   FormControl,
   Label
 } from "react-bootstrap";
-import ContextProvider from "components/core/contextprovider";
+import ContextConsumer from "components/core/contextconsumer";
 
 class TextBox extends Component{
         onContextChange(e){  
@@ -42,4 +42,4 @@ TextBox.defaultProps = {
                 "placeholder":""            
 }
 
-export default ContextProvider(TextBox, (e)=>e.target.value);
+export default ContextConsumer(TextBox, (e)=>e.target.value);

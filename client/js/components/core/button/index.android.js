@@ -1,6 +1,6 @@
 import React,{PureComponent} from 'react';
 import {Button} from 'native-base';
-import ContextProvider from 'components/core/contextprovider';
+import ContextConsumer from 'components/core/contextconsumer';
 
 class ButtonContol extends PureComponent{
                 render(){
@@ -11,4 +11,4 @@ class ButtonContol extends PureComponent{
 }
 
 
-export default ContextProvider(ButtonContol);
+export default ContextConsumer(ButtonContol);

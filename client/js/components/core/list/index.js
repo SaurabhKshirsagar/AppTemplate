@@ -1,10 +1,10 @@
 import React from 'react';
 import repeatableViewGenerater from "components/repeatableviewgenerater";
-import ContextComponent from "components/core/contextcomponent";
-import ContextProvider from 'components/core/contextprovider';
+import ContextOwner from "components/core/contextowner";
+import ContextConsumer from 'components/core/contextconsumer';
 import DS from "datastore";
 import { autorun } from "mobx";
-class ListComp extends ContextComponent {
+class ListComp extends ContextOwner {
   getContextVars() {
     let { ...context } = this.props.context;
     let { datastore, itemkey } = this.props;
@@ -37,7 +37,7 @@ class Selector extends React.Component{
 }
 
 
-let SelectorComp= ContextProvider(Selector);
+let SelectorComp= ContextConsumer(Selector);
 
 
 let renderList = (thisReference, listItems) => {
@@ -69,5 +69,5 @@ renderChildWrapper = (thisReference, item,element, key, ds) => {
 
 let List=repeatableViewGenerater("List", renderList, renderChildItem, null, null, renderChildWrapper,ListComp);
 
-export default ContextProvider(List);
+export default ContextConsumer(List);
 

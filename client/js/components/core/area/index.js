@@ -1,10 +1,10 @@
 import React from 'react';
-import ContextProvider from 'components/core/contextprovider';
-import ContextComponent from "components/core/contextcomponent";
+import ContextConsumer from 'components/core/contextconsumer';
+import ContextOwner from "components/core/contextowner";
 
 
 
-class Area extends ContextComponent {
+class Area extends ContextOwner {
     render() {
    
             return (<div style={{height: "92vh", width:"85%",margin:'5px',display:"flex"}}>
@@ -14,4 +14,4 @@ class Area extends ContextComponent {
     }
 }
 
-export default ContextProvider(Area)
+export default ContextConsumer(Area)

@@ -1,9 +1,9 @@
 import React from 'react';
 import MadiaQuery from 'components/core/madiaquery';
-import ContextComponent from "components/core/contextcomponent"
-import ContextProvider from 'components/core/contextprovider';
+import ContextOwner from "components/core/contextowner"
+import ContextConsumer from 'components/core/contextconsumer';
 
-class Slide extends ContextComponent {
+class Slide extends ContextOwner {
     render() {       
             return (<MadiaQuery>
              {this.props.children}
@@ -11,4 +11,4 @@ class Slide extends ContextComponent {
     }
 }
 
-export default ContextProvider(Slide)
+export default ContextConsumer(Slide)

@@ -1,10 +1,10 @@
 import React from 'react';
-import ContextProvider from 'components/core/contextprovider';
-import ContextComponent from "components/core/contextcomponent";
+import ContextConsumer from 'components/core/contextconsumer';
+import ContextOwner from "components/core/contextowner";
 import MadiaQuery from 'components/core/madiaquery';
 
 
-class Area extends ContextComponent {
+class Area extends ContextOwner {
     render() {
    
             return (<MadiaQuery master={true}>
@@ -14,4 +14,4 @@ class Area extends ContextComponent {
     }
 }
 
-export default ContextProvider(Area)
+export default ContextConsumer(Area)

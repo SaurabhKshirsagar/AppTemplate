@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import R from "ramda";
 import _ from "lodash";
-import ContextComponent from "components/core/contextcomponent";
+import ContextOwner from "components/core/contextowner";
 import isContainerComponent from "helpers/iscontainercomponent";
-import ContextProvider from "components/core/contextprovider";
+import ContextConsumer from "components/core/contextconsumer";
 import DS from "datastore";
 let repeatableViewGenerater = (
   containerType,

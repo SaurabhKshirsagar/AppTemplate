@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Container, Content, InputGroup, Input, Icon } from 'native-base';
-import ContextProvider from "components/core/contextprovider";
+import ContextConsumer from "components/core/contextconsumer";
 
 class TextBox extends Component{
         onContextChange(e){  
@@ -35,4 +35,4 @@ TextBox.defaultProps = {
     "placeholder": ""
 }
 
-export default ContextProvider(TextBox, (e) => e.nativeEvent.text );
+export default ContextConsumer(TextBox, (e) => e.nativeEvent.text );

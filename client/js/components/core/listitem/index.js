@@ -1,14 +1,14 @@
 import React from "react";
 import ReactDom from "react-dom";
 import PathComponent from "components/core/pathComponent";
-import ContextComponent from "components/core/contextcomponent";
+import ContextOwner from "components/core/contextowner";
 import LinkToWrapper from "components/core/linktowrapper";
-import ContextProvider from "components/core/contextprovider";
+import ContextConsumer from "components/core/contextconsumer";
 
 import $globals from "components/app/globals";
 import { navigateTo } from "actions/navigation";
 
-class ListItem extends ContextComponent {
+class ListItem extends ContextOwner {
   getContextVars() {
     let {...context} =this.props.context
     return {...context}
@@ -27,4 +27,4 @@ class ListItem extends ContextComponent {
   }
 }
 
-export default ContextProvider(ListItem)
+export default ContextConsumer(ListItem)

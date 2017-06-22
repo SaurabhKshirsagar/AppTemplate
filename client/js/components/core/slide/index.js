@@ -1,8 +1,8 @@
 import React from 'react';
-import ContextComponent from "components/core/contextcomponent"
-import ContextProvider from 'components/core/contextprovider';
+import ContextOwner from "components/core/contextowner"
+import ContextConsumer from 'components/core/contextconsumer';
 
-class Slide extends ContextComponent {
+class Slide extends ContextOwner {
     render() {       
             return (<div style={{width: "300px",margin: "5px 0px 5px 5px",padding:"10px",backgroundColor: "#e3e3e3"}}>
              {this.props.children}
@@ -10,4 +10,4 @@ class Slide extends ContextComponent {
     }
 }
 
-export default ContextProvider(Slide)
+export default ContextConsumer(Slide)

@@ -1,6 +1,6 @@
 import React,{PureComponent} from 'react';
 import {Checkbox} from 'react-bootstrap';
-import ContextProvider from 'components/core/contextprovider';
+import ContextConsumer from 'components/core/contextconsumer';
 
 
 
@@ -24,4 +24,4 @@ CheckboxComp.defaultProps = {
                 "value":"",     
 }
 
-export default ContextProvider(CheckboxComp, (e)=>e.target.checked);
+export default ContextConsumer(CheckboxComp, (e)=>e.target.checked);

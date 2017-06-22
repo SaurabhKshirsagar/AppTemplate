@@ -1,6 +1,6 @@
 import React,{PureComponent} from 'react';
 import { Button, FormGroup, ControlLabel, FormControl, Label} from 'react-bootstrap';
-import ContextProvider from 'components/core/contextprovider';
+import ContextConsumer from 'components/core/contextconsumer';
 
 
 class LabelComp extends PureComponent{
@@ -18,4 +18,4 @@ LabelComp.defaultProps = {
                 "placeholder":""            
 }
 
-export default ContextProvider(LabelComp, (e)=>e.target.value);
+export default ContextConsumer(LabelComp, (e)=>e.target.value);

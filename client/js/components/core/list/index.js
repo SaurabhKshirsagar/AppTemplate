@@ -27,19 +27,6 @@ class ListComp extends ContextOwner {
   
 }
 
-
-class Selector extends React.Component{
-                render(){
-                    return <div onClick={()=>{this.props.onClick()}}
-
-                                  {...this.props} >{this.props.children} </div>        
-                }
-}
-
-
-let SelectorComp= ContextConsumer(Selector);
-
-
 let renderList = (thisReference, listItems) => {
     return (
         <div style={thisReference.props.style}>

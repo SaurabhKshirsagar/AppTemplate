@@ -14,8 +14,6 @@ let localStorage=new Storage();
 function MemoryAdapter(DS, { events }, dsName) {
   this.events = events;
   this.dsName = dsName;
- debugger;
-
   //check in localStorage
   if (!localStorage.getItem(this.dsName)) {
     this.DS = DS;
@@ -23,6 +21,10 @@ function MemoryAdapter(DS, { events }, dsName) {
   } else
     this.DS = JSON.parse(localStorage.getItem(this.dsName));
 }
+
+MemoryAdapter.prototype.init =async function() {
+   return  _.cloneDeep(this.DS);
+};
 
 MemoryAdapter.prototype.create = function(item) {
   let items = localStorage.getItem(this.dsName);
@@ -35,7 +37,7 @@ MemoryAdapter.prototype.create = function(item) {
         items.push(item);
         localStorage.setItem(this.dsName, JSON.stringify(items));
         this.DS = items;
-        return Promise.resolve({ key: items.length, item: item });
+        return Promise.resolve({ key: items.length-1, item: item });
       },
       preCreate
     )(item);

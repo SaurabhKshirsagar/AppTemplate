@@ -66,7 +66,7 @@ class Iterator {
 class List extends Iterator {
   constructor(DS, schema, item_Key) {
     super(DS, item_Key);
-    //===Auto update 
+    //===Auto update
     this.changeQueue = observable.array();
     autorun(() => {
       console.log(this.changeQueue.length);
@@ -87,14 +87,16 @@ class List extends Iterator {
         return true;
       }),
       init: action(async function(Adapter, schema, item_Key) {
-        let DS = Adapter.DS;
+        let DS = await Adapter.init();
+       
         this.Adapter = Adapter;
         this.schema = schema;
         this.items = await getItemsModel.call(this, DS);
-        this.newItem =await  getDefaultNewItem(schema);
+        this.newItem = await getDefaultNewItem(schema);
         this.index = item_Key != "" && item_Key != null ? item_Key : 0;
         this.itemKey = this.index;
         this.item = this.items[this.itemKey];
+        debugger;
       }),
       getByKey: action(function(item_Key) {
         if (item_Key >= 0 && item_Key < this.items.length)
@@ -118,35 +120,39 @@ class List extends Iterator {
         this.item = this.items[this.itemKey];
         return { key: this.itemKey, item: this.item };
       }),
-        setSelected: action(function(selectedkey) {
-        this.index=selectedkey;
+      setSelected: action(function(selectedkey) {
+        this.index = selectedkey;
         this.itemKey = selectedkey;
         this.item = this.items[this.itemKey];
         return { key: this.itemKey, item: this.item };
       }),
       //CRUD operations
-      reload: action(function(key) {
+      reload: action(async function(key) {
         this.init(this.Adapter, this.schema, key);
       }),
       create: action(async function() {
         if (!_.isEmpty(this.changeQueue)) throw "please save the changes";
-        let item = await this.Adapter.create(this.newItem);
-        this.reload(this.itemKey);
+        let { key } = await this.Adapter.create(this.newItem);
+        this.setSelected(this.itemKey);
+        this.reload(key);
+      //  this.setSelected(key);
       }),
       update: action(async function() {
-       let item = await this.Adapter.update(this.changeQueue);
+        let item = await this.Adapter.update(this.changeQueue);
         this.changeQueue.clear();
       }),
       delete: action(async function() {
         if (!_.isEmpty(this.changeQueue)) throw "please save the changes";
-        let item = await this.Adapter.delete(this.itemKey)
-        this.reload(this.itemKey);
-      
+        let item = await this.Adapter.delete(this.itemKey);
+        let itemKey = this.itemKey;
+      //  this.setSelected(this.itemKey);
+        this.reload();
+        
       }),
       each: action(function(callback) {
         for (let index = 0; index < this.items.length; index++) {
           let item = this.items[index];
-          callback(item,index);
+          callback(item, index);
         }
       })
     });
@@ -155,6 +161,7 @@ class List extends Iterator {
   }
 }
 
+///////////////////=================New Changes not made in Map
 class Map extends Iterator {
   constructor(DS, schema, item_Key) {
     super(DS, item_Key);

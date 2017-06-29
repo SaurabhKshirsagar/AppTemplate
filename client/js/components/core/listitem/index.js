@@ -8,23 +8,16 @@ import ContextConsumer from "components/core/contextconsumer";
 import $globals from "components/app/globals";
 import { navigateTo } from "actions/navigation";
 
-class ListItem extends ContextOwner {
-  getContextVars() {
-    let {...context} =this.props.context
-    return {...context}
-  }
+class ListItem extends React.Component {
   render() {
     return (
-     <div>
-        {
-            React.Children.map(this.props.children,
-                                 (clild)=>{ 
-                                 return  React.cloneElement(clild, {context:this.state.context})
-                                 })
-        }
-     </div>
+      <div>
+        {React.Children.map(this.props.children, clild => {
+          return React.cloneElement(clild, { context: this.props.context });
+        })}
+      </div>
     );
   }
 }
 
-export default ContextConsumer(ListItem)
+export default ContextConsumer(ListItem);

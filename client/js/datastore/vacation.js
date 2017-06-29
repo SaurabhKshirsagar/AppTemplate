@@ -116,7 +116,7 @@ let schema = {
     },
     postCreate: async function({ key, item }) {
       alert(`New item added.`);
-      return item;
+      return {key,item};
     },
     preUpdate: async function(item) {},
     postUpdate: async function(item) {},

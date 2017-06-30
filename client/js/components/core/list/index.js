@@ -29,7 +29,7 @@ class ListComp extends ContextOwner {
 
 let renderList = (thisReference, listItems) => {
     return (
-        <div style={thisReference.props.style}>
+        <div className="list-group" style={thisReference.props.style}>
             {listItems}
         </div>
     );
@@ -47,7 +47,7 @@ renderChildItem = (thisReference, item, key, ds) => {
 renderChildWrapper = (thisReference, item,element, key, ds) => {
     let selectedItem=thisReference?(thisReference.state.context.datastore.itemKey==key):false;
     return (
-        <div style={{padding:"2px",backgroundColor: (selectedItem?"#b2dbfb":null)}} onClick={click.bind(null, thisReference,key, item,ds)}>
+        <div className="panel" style={{padding:"2px",margin:"2px",backgroundColor: (selectedItem?"#b2dbfb":null)}} onClick={click.bind(null, thisReference,key, item,ds)}>
                     {element}
         </div>
     );

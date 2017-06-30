@@ -31,7 +31,6 @@ let repeatableViewGenerater = (
     }
     renderChildren() {
       let items = DS[this.props.datastore];
-      debugger;
       let childrens = [];
       items.each((value, key) => {
         let { valueField, keyField, context, params } = this.props;

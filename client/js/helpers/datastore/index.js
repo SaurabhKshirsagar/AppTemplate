@@ -88,7 +88,6 @@ class List extends Iterator {
       }),
       init: action(async function(Adapter, schema, item_Key) {
         let DS = await Adapter.init();
-       
         this.Adapter = Adapter;
         this.schema = schema;
         this.items = await getItemsModel.call(this, DS);
@@ -96,7 +95,6 @@ class List extends Iterator {
         this.index = item_Key != "" && item_Key != null ? item_Key : 0;
         this.itemKey = this.index;
         this.item = this.items[this.itemKey];
-        debugger;
       }),
       getByKey: action(function(item_Key) {
         if (item_Key >= 0 && item_Key < this.items.length)
@@ -133,13 +131,14 @@ class List extends Iterator {
       create: action(async function() {
         if (!_.isEmpty(this.changeQueue)) throw "please save the changes";
         let { key } = await this.Adapter.create(this.newItem);
-        this.setSelected(this.itemKey);
+       // this.setSelected(key);
         this.reload(key);
-      //  this.setSelected(key);
+        this.setSelected(key);
       }),
       update: action(async function() {
         let item = await this.Adapter.update(this.changeQueue);
         this.changeQueue.clear();
+          
       }),
       delete: action(async function() {
         if (!_.isEmpty(this.changeQueue)) throw "please save the changes";

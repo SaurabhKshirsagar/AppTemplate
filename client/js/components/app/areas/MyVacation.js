@@ -156,8 +156,8 @@ class MyVacation extends ContextOwner {
                         marginLeft: 4
                       },
                       name: "sa",
-                      value: $context.datastore.newItem.id,
-                      placeholder: "id"
+                      value: $context.datastore.newItem.name,
+                      placeholder: "name"
                     };
                   }}
                   onClick={($context, $globals, $params, value) => {
@@ -191,7 +191,7 @@ class MyVacation extends ContextOwner {
                       params = $params,
                       value
                     ) {
-                      $context.datastore.newItem.id = value;
+                      $context.datastore.newItem.name = value;
                     })($context, $globals, $params, value);
                   }}
                   {...this.getContexts()}
@@ -293,13 +293,13 @@ class MyVacation extends ContextOwner {
                     style: {
                       overflow: "auto",
                       display: "flex",
-                      width: "260px",
+                      width: "285px",
                       flexDirection: "column",
                       left: "0px",
                       height: "600px",
                       position: "relative",
                       border: "solid 0.3px #d4cfcf",
-                      margin: "4px",
+                      margin: "0px",
                       backgroundColor: "white",
                       right: "0px"
                     },
@@ -636,7 +636,65 @@ class MyVacation extends ContextOwner {
                     $context.datastore.item.id = value;
                   })($context, $globals, $params, value);
                 }} {...this.getContexts()}>
-              </TextBox><Button mapContextToProps={($context, $params) => {
+              </TextBox>
+               <TextBox mapContextToProps={($context, $params) => {
+                  return {
+                    validations: {
+                      required: { value: "true", message: "Required." },
+                      minLength: {
+                        value: "2",
+                        message: "Must be at least 2 characters."
+                      },
+                      maxLength: {
+                        value: "6",
+                        message: "Must be at most 6 characters."
+                      }
+                    },
+                    style: {
+                      height: 25,
+                      width: 200,
+                      marginTop: 8,
+                      marginRight: 4,
+                      marginBottom: 0,
+                      marginLeft: 4
+                    },
+                    name: "EmployeeID",
+                    value: $context.datastore.item.name,
+                      placeholder: "id"
+                  };
+                }} onClick={($context, $globals, $params, value) => {
+                  (function onClick(
+                    context = $context,
+                    globals = $globals,
+                    params = $params,
+                    value
+                  ) {})($context, $globals, $params, value);
+                }} onChange={($context, $globals, $params, value) => {
+                  (function onChange(
+                    context = $context,
+                    globals = $globals,
+                    params = $params,
+                    value
+                  ) {})($context, $globals, $params, value);
+                }} onFocus={($context, $globals, $params, value) => {
+                  (function onFocus(
+                    context = $context,
+                    globals = $globals,
+                    params = $params,
+                    value
+                  ) {})($context, $globals, $params, value);
+                }} onBlur={($context, $globals, $params, value) => {
+                  (function onBlur(
+                    context = $context,
+                    globals = $globals,
+                    params = $params,
+                    value
+                  ) {
+                    $context.datastore.item.name = value;
+                  })($context, $globals, $params, value);
+                }} {...this.getContexts()}>
+              </TextBox>
+              <Button mapContextToProps={($context, $params) => {
                   return {
                     style: {
                       backgroundColor: "white",
@@ -718,13 +776,13 @@ class MyVacation extends ContextOwner {
                     style: {
                       overflow: "auto",
                       display: "flex",
-                      width: "260px",
+                      width: "285px",
                       flexDirection: "column",
                       left: "0px",
                       height: "600px",
                       position: "relative",
                       border: "solid 0.3px #d4cfcf",
-                      margin: "4px",
+                      margin: "0px",
                       backgroundColor: "white",
                       right: "0px"
                     },
@@ -1195,7 +1253,7 @@ class MyVacation extends ContextOwner {
                   }}
                 >
                <TextBox mapContextToProps={($context, $params) => {
-                 debugger;
+            
                   return {
                     validations: {
                       required: { value: "true", message: "Required." },

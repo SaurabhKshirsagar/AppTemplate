@@ -132,8 +132,8 @@ class List extends Iterator {
         if (!_.isEmpty(this.changeQueue)) throw "please save the changes";
         let { key } = await this.Adapter.create(this.newItem);
        // this.setSelected(key);
-        this.reload(key);
-        this.setSelected(key);
+        this.reload();
+        this.setSelected();
       }),
       update: action(async function() {
         let item = await this.Adapter.update(this.changeQueue);
@@ -146,6 +146,7 @@ class List extends Iterator {
         let itemKey = this.itemKey;
       //  this.setSelected(this.itemKey);
         this.reload();
+        this.setSelected();
         
       }),
       each: action(function(callback) {

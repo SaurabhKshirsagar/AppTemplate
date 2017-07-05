@@ -11,7 +11,7 @@ import { navigateTo } from "actions/navigation";
 class ListItem extends React.Component {
   render() {
     return (
-      <div>
+      <div {...this.props}>
         {React.Children.map(this.props.children, clild => {
           return React.cloneElement(clild, { context: this.props.context });
         })}

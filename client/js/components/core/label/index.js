@@ -8,7 +8,7 @@ class LabelComp extends PureComponent{
 
                 render(){
                     //let {params} = this.props,
-                    return <div>
+                    return <div {...this.props} >{this.props.text}
                             </div>
                 }
 }

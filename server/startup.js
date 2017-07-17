@@ -4,7 +4,7 @@ var readline = require("readline"),
   compiler = webpack(webpackConfig),
   path = require("path"),
   bodyParser = require("body-parser"),
-  npm = require("npm"),
+  npm = require("npm-programmatic"),
   express = require("express"),
   compression = require("compression");
 
@@ -60,20 +60,33 @@ function startExpress() {
   //npm install apis
   app.post("/npminstall", function(req, res) {
     let packagename = req.body.packagename;
-    npm.load(
-      {
-        loaded: false
-      },
-      function(err) {
-        npm.commands.list([packagename], function(er, data) {
-        });
-        npm.commands.install([packagename], function(er, data) {
-        });
-        npm.on("log", function(message) {
-          console.log(message);
-        });
-      }
-    );
+
+     npm.install([packagename],{
+       cwd:__dirname
+     })
+    .then(function(e){
+      console.log(e);
+      res.send("SUCCESS!!!")
+        //console.log("SUCCESS!!!");
+    })
+    .catch(function(e){
+       res.send(e);
+        console.log("Unable to install package");
+    });
+    // npm.load(
+    //   {
+    //     loaded: false
+    //   },
+    //   function(err) {
+    //     npm.commands.list([packagename], function(er, data) {
+    //     });
+    //     npm.commands.install([packagename], function(er, data) {
+    //     });
+    //     npm.on("log", function(message) {
+    //       console.log(message);
+    //     });
+    //   }
+    // );
   });
 
 

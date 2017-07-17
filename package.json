@@ -43,6 +43,7 @@
     "react-addons-shallow-compare": "^15.4.1",
     "react-bootstrap": "^0.30.1",
     "react-bootstrap-table": "^2.4.1",
+    "react-color": "^2.13.1",
     "react-date-time-range": "^4.0.0",
     "react-dom": "^15.3.0",
     "react-gravatar": "^2.4.5",

@@ -4,8 +4,9 @@ var readline = require("readline"),
   compiler = webpack(webpackConfig),
   path = require("path"),
   bodyParser = require("body-parser"),
-  npm = require("npm-programmatic"),
+  npm = require("./npminstall"),
   express = require("express"),
+  _ = require("lodash"),
   compression = require("compression");
 
 var app;
@@ -55,47 +56,57 @@ function startExpress() {
   );
   app.use(bodyParser.json({ limit: "50mb" }));
 
-
-
   //npm install apis
   app.post("/npminstall", function(req, res) {
     let packagename = req.body.packagename;
+    let data = {};
 
-     npm.install([packagename],{
-       cwd:__dirname
-     })
-    .then(function(e){
-      console.log(e);
-      res.send("SUCCESS!!!")
-        //console.log("SUCCESS!!!");
-    })
-    .catch(function(e){
-       res.send(e);
-        console.log("Unable to install package");
-    });
-    // npm.load(
-    //   {
-    //     loaded: false
-    //   },
-    //   function(err) {
-    //     npm.commands.list([packagename], function(er, data) {
-    //     });
-    //     npm.commands.install([packagename], function(er, data) {
-    //     });
-    //     npm.on("log", function(message) {
-    //       console.log(message);
-    //     });
-    //   }
-    // );
+    npm
+      .install([packagename], {
+        cwd: __dirname
+      })
+      .then(function(e) {
+        data.error = null;
+        data.message = "Package installed";
+        res.send(data);
+      })
+      .catch(function(e) {
+        data.error = true;
+        data.message = "unable to install package";
+        res.send(data);
+      });
   });
 
-
+  app.post("/npmlist", function(req, res) {
+    let packagename = req.body.packagename;
+    let data = {};
+    npm
+      .list(__dirname)
+      .then(function(packages) {
+        if (0 <= _.indexOf(packages, packagename)) {
+          data.error = null;
+          data.message = `${packagename} already installed.`;
+          res.send(data);
+        } else if (0 <= _.indexOf(packages, `UNMET PEER DEPENDENCY ${packagename}`)) {
+          data.error = null;
+          data.message = `${packagename} installed with UNMET PEER DEPENDENCY `;
+          res.send(data);
+        }
+          data.error = true;
+          data.message = `${packagename} is not installed. Try with packagename@VERSION`;
+          res.send(data);
+      })
+      .catch(function(e) {
+        data.error = true;
+        data.message = `${packagename} is not installed. Try with packagename@VERSION`;
+        res.send(data);
+      });
+  });
 
   //if you are adding more routes then ensure that app.get('*',...)  remains the last route.
   app.get("*", function(req, res) {
     res.sendFile(path.join(__dirname, "/../build/index.html"));
   });
-
 
   app.listen(app.get("port"));
   console.log("express server started.");

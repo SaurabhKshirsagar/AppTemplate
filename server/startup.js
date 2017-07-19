@@ -15,7 +15,7 @@ let loopback = require("loopback"), fs = require("fs");
 
 function startExpress() {
   app = express();
-  var port = process.env.PORT || 8090;
+  var port = process.env.PORT || 8091;
   app.set("port", port);
   console.log("hosting express server on port " + port + "...");
 

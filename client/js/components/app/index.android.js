@@ -14,8 +14,7 @@ import Drawer from 'react-native-drawer';
 import {styles, tabStyles} from 'components/core/styles'
 import { MediaQuery } from "react-native-responsive";
 import { navigateTo } from "actions/navigation";
-import Area_1 from "components/app/areas/Area_1";
-import Area_2 from "components/app/areas/Area_2";
+
 
 
 
@@ -58,8 +57,7 @@ class App extends ContextOwner {
                             <View style={tabStyles.menu}>
                                 {menus}
                             </View>
-                            <PathComponent pathname="/Area_1" component={Area_1} {...this.getContexts() } />
-                            <PathComponent pathname="/Area_2" component={Area_2} {...this.getContexts() } />
+                           
                         </View>
                     </View>
                 </MediaQuery>
@@ -92,10 +90,8 @@ class App extends ContextOwner {
                                         </ListItem>
                                     </List>
                                 </View>
-                                <View style={styles.body}>
+                                <View >
                                 
-                                  <PathComponent pathname="/Area_1" component={Area_1} {...this.getContexts() } />
-                            <PathComponent pathname="/Area_2" component={Area_2} {...this.getContexts() } />
                                     
                                 </View>
                             </View>

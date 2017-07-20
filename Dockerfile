@@ -12,6 +12,8 @@ COPY "index.html" "$app"
 
 COPY "webpack.config.js" "$app"
 
+COPY "vendor.webpack.config.js" "$app"
+
 COPY "client" "$app/client"
 
 COPY "server" "$app/server"

@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { styles, tabStyles } from "components/core/styles";
-import { MediaQuery } from "react-native-responsive";
-import { Device } from "react-native-responsive";
+import { MediaQuery } from "helpers/react-native-responsive";
+import { Device } from "helpers/react-native-responsive";
 
 class MadiaQuery extends React.Component {
   constructor(props) {

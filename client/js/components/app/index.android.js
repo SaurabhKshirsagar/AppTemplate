@@ -12,7 +12,7 @@ import navigation from "actions/navigation";
 import {List, ListItem, Icon, Button,  } from 'native-base';
 import Drawer from 'react-native-drawer';
 import {styles, tabStyles} from 'components/core/styles'
-import { MediaQuery } from "react-native-responsive";
+import { MediaQuery } from "helpers/react-native-responsive";
 import { navigateTo } from "actions/navigation";
 
 

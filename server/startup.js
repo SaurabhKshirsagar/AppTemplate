@@ -4,7 +4,7 @@ var readline = require("readline"),
   compiler = webpack(webpackConfig),
   path = require("path"),
   bodyParser = require("body-parser"),
-  npm = require("./npminstall"),
+  npm = require("./npm"),
   express = require("express"),
   _ = require("lodash"),
   compression = require("compression");
@@ -19,8 +19,8 @@ function startExpress() {
   app.set("port", port);
   console.log("hosting express server on port " + port + "...");
 
-  app.get("/listUsers", function(req, res) {
-    fs.readFile(__dirname + "/" + "users.json", "utf8", function(err, data) {
+  app.get("/listUsers", function (req, res) {
+    fs.readFile(__dirname + "/" + "users.json", "utf8", function (err, data) {
       console.log(data);
       res.end(data);
     });
@@ -43,7 +43,8 @@ function startExpress() {
 
   // turn on compression
   app.use(compression());
-
+  //apk file
+  app.use('/apk', express.static(__dirname + '/../android/app/build/outputs/apk/'));
   // index.html, css & js
   app.use(express.static(__dirname + "/../build"));
   // images
@@ -55,9 +56,24 @@ function startExpress() {
     })
   );
   app.use(bodyParser.json({ limit: "50mb" }));
-
+//build apk
+  app.get("/build/apk", function(req, res) {
+    let data = {};
+    npm
+      .buildapk()
+      .then(function(msg) {
+        data.isbuild = false;
+        data.message = msg;
+        res.send(data);
+      })
+      .catch(function(e) {
+        data.isbuild = false;
+        data.message = e;
+        res.send(data);
+      });
+  });
   //npm install apis
-  app.post("/npminstall", function(req, res) {
+  app.post("/npminstall", function (req, res) {
     let packagename = req.body.packagename;
     let data = {};
 
@@ -65,24 +81,24 @@ function startExpress() {
       .install([packagename], {
         cwd: __dirname
       })
-      .then(function(e) {
+      .then(function (e) {
         data.error = null;
         data.message = "Package installed";
         res.send(data);
       })
-      .catch(function(e) {
+      .catch(function (e) {
         data.error = true;
         data.message = "unable to install package";
         res.send(data);
       });
   });
 
-  app.post("/npmlist", function(req, res) {
+  app.post("/npmlist", function (req, res) {
     let packagename = req.body.packagename;
     let data = {};
     npm
       .list(__dirname)
-      .then(function(packages) {
+      .then(function (packages) {
         if (0 <= _.indexOf(packages, packagename)) {
           data.error = null;
           data.message = `${packagename} already installed.`;
@@ -92,11 +108,11 @@ function startExpress() {
           data.message = `${packagename} installed with UNMET PEER DEPENDENCY `;
           res.send(data);
         }
-          data.error = true;
-          data.message = `${packagename} is not installed. Try with packagename@VERSION`;
-          res.send(data);
+        data.error = true;
+        data.message = `${packagename} is not installed. Try with packagename@VERSION`;
+        res.send(data);
       })
-      .catch(function(e) {
+      .catch(function (e) {
         data.error = true;
         data.message = `${packagename} is not installed. Try with packagename@VERSION`;
         res.send(data);
@@ -104,7 +120,7 @@ function startExpress() {
   });
 
   //if you are adding more routes then ensure that app.get('*',...)  remains the last route.
-  app.get("*", function(req, res) {
+  app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "/../build/index.html"));
   });
 
@@ -122,7 +138,7 @@ if (process.env.NODE_ENV != "production") {
     {
       aggregateTimeout: 100
     },
-    function(err, stats) {
+    function (err, stats) {
       var rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
@@ -131,7 +147,7 @@ if (process.env.NODE_ENV != "production") {
         console.error(err);
         rl.question(
           "\nWebpack bundling failed, press return to exit...",
-          function() {
+          function () {
             process.exit(1);
           }
         );
@@ -142,7 +158,7 @@ if (process.env.NODE_ENV != "production") {
       if (jsonStats.errors.length > 0) {
         rl.question(
           "\nWebpack bundling failed, press return to exit...",
-          function() {
+          function () {
             process.exit(1);
           }
         );

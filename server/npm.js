@@ -4,8 +4,12 @@ const exec = require('child_process').exec;
 module.exports = {
 	buildapk: function () {
 		return new Promise(function (resolve, reject) {
-			exec(`gradlew assemblerelease`, { cwd: `${__dirname}/../android/` }, (error, stdout, stderr) => {
+			exec(`./gradlew assemblerelease`, { cwd: `${__dirname}/../android/` }, (error, stdout, stderr) => {
 				if (error) {
+					console.log(`--${__dirname}/../android/----------stderr`)
+					console.log(stderr)
+					console.log("----------error")
+					console.log(error)
 					console.log("apk build fail")
 				} else {
 					console.log("apk build successfully")

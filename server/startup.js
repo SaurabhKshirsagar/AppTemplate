@@ -4,10 +4,10 @@ var readline = require("readline"),
   compiler = webpack(webpackConfig),
   path = require("path"),
   bodyParser = require("body-parser"),
-  npm = require("./npm"),
   express = require("express"),
   _ = require("lodash"),
-  compression = require("compression");
+  compression = require("compression"),
+  API=require("./API");
 
 var app;
 let loopback = require("loopback"), fs = require("fs");
@@ -56,73 +56,16 @@ function startExpress() {
     })
   );
   app.use(bodyParser.json({ limit: "50mb" }));
-//build apk
-  app.get("/build/apk", function(req, res) {
-    let data = {};
-    npm
-      .buildapk()
-      .then(function(msg) {
-        data.isbuild = false;
-        data.message = msg;
-        res.send(data);
-      })
-      .catch(function(e) {
-        data.isbuild = false;
-        data.message = e;
-        res.send(data);
-      });
-  });
-  //npm install apis
-  app.post("/npminstall", function (req, res) {
-    let packagename = req.body.packagename;
-    let data = {};
 
-    npm
-      .install([packagename], {
-        cwd: __dirname
-      })
-      .then(function (e) {
-        data.error = null;
-        data.message = "Package installed";
-        res.send(data);
-      })
-      .catch(function (e) {
-        data.error = true;
-        data.message = "unable to install package";
-        res.send(data);
-      });
-  });
-
-  app.post("/npmlist", function (req, res) {
-    let packagename = req.body.packagename;
-    let data = {};
-    npm
-      .list(__dirname)
-      .then(function (packages) {
-        if (0 <= _.indexOf(packages, packagename)) {
-          data.error = null;
-          data.message = `${packagename} already installed.`;
-          res.send(data);
-        } else if (0 <= _.indexOf(packages, `UNMET PEER DEPENDENCY ${packagename}`)) {
-          data.error = null;
-          data.message = `${packagename} installed with UNMET PEER DEPENDENCY `;
-          res.send(data);
-        }
-        data.error = true;
-        data.message = `${packagename} is not installed. Try with packagename@VERSION`;
-        res.send(data);
-      })
-      .catch(function (e) {
-        data.error = true;
-        data.message = `${packagename} is not installed. Try with packagename@VERSION`;
-        res.send(data);
-      });
-  });
-
-  //if you are adding more routes then ensure that app.get('*',...)  remains the last route.
+//=========================== API ============================
+  app.post("/createapp",API.createapp);
+  app.get("/build/apk",API.buildapk);
+  app.post("/npminstall",API.npminstall);
+  app.post("/npmlist",API.npmlist);
   app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "/../build/index.html"));
   });
+//======================= API END ============================
 
   app.listen(app.get("port"));
   console.log("express server started.");
@@ -130,6 +73,7 @@ function startExpress() {
     console.log("Please wait for webpack build to finish...");
   }
 }
+
 
 if (process.env.NODE_ENV != "production") {
   startExpress();

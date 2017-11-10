@@ -13,6 +13,10 @@ let componentImports = {
   import ContextConsumer from "components/core/contextconsumer";
 
   import $globals from "components/app/globals";
-  import {navigateTo} from "actions/navigation";`;
+  import {navigateTo} from "actions/navigation";
+  
+  import {BrowserRouter} from 'react-router-dom';
+  import {ReactHistory} from "components/reacthistory";`
+  
 
 module.exports={componentImports,defaultImports};

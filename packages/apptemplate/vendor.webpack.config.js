@@ -1,4 +1,5 @@
-var webpack = require("webpack");
+var webpack = require("webpack"),
+path= require("path");
 
 module.exports = {
   entry: {
@@ -19,16 +20,15 @@ module.exports = {
     ]
   },
   output: {
-    filename: "[name].bundle.js",
-    path: "build/",
-    library: "[name]_lib"
+    filename: "vendor.bundle.js",
+    path: `${__dirname}/build`,
+    library: "vendor_lib"
   },
   plugins: [
     new webpack.DllPlugin({
-      path: "build/[name]-manifest.json",
-      name: "[name]_lib"
-    }),
-    new webpack.optimize.UglifyJsPlugin(),
+      path: `${__dirname}/build/vendor-manifest.json`,
+      name: "vendor_lib"
+    })
       
   ]
 };

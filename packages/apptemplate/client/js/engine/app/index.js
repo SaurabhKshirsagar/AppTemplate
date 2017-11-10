@@ -5,10 +5,5 @@ import Bootstrap from 'styles/themes/paper/bootstrap.css';
 import 'styles/scrollBar.css';
 import {ReactHistory} from "components/reacthistory"
 import App from 'components/app'
-        let Root =  (
-            <BrowserRouter>
-              <ReactHistory>
-                    <App/>
-               </ReactHistory>
-            </BrowserRouter>);
-       ReactDOM.render(Root, document.getElementById("app"));
+let Root =  (<App/>);
+ReactDOM.render(Root, document.getElementById("app"));

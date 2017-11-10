@@ -12,6 +12,7 @@ export default class LinkToWrapper extends React.Component {
         super(props);
     }
     onClick(){
+        debugger;
         let moduleState=this.props.moduleState;
         let pathValue = this.props.to;
         localStorage.setItem(pathValue, JSON.stringify({moduleState}));  

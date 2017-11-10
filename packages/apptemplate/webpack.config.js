@@ -6,6 +6,7 @@ var webpack = require("webpack"),
     new HtmlWebpackPlugin({
       template: "./client/index.html",
       hash: true,
+      baseUrl:"/",
       minify: {
         collapseWhitespace: true,
         removeRedundantAttributes: true,
@@ -17,7 +18,7 @@ var webpack = require("webpack"),
       context: ".",
       manifest: require("./build/vendor-manifest.json")
     }),
-    new ExtractTextPlugin("styles.min.css", { allChunks: true }),
+    new ExtractTextPlugin({ filename:"styles.min.css", allChunks: true }),
     new webpack.HotModuleReplacementPlugin()
   ];
 
@@ -35,19 +36,20 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: "babel",
+        loader: "babel-loader",
         query: {
-          presets: ["es2015", "react"]
-        }
+                    cacheDirectory: true
+                }
+      
       },
       {
         test: /\.css$/,
-        loader: "style-loader!css-loader"
+        loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' })
       },
-      {
-        test: /\.png$/,
-        loader: "url-loader?limit=100000"
-      },
+     {
+                test: /\.png$/,
+                loader: "url-loader?limit=100000"
+            },
       {
         test: /\.jpg$/,
         loader: "file-loader"
@@ -58,33 +60,23 @@ module.exports = {
       },
 
       {
-        test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url?limit=10000&mimetype=application/font-woff"
-      },
-      {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url?limit=10000&mimetype=application/octet-stream"
-      },
-      {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "file"
-      },
-      {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url?limit=10000&mimetype=image/svg+xml"
+        test: /\.(ttf|eot|svg|woff|woff2)(\?[a-z0-9]+)?$/,
+        loaders: ['file-loader?name=fonts/[name].[ext]']
       }
+     
     ]
   },
   plugins: plugins,
   output: {
     filename: "bundle.js",
-    //  path: "./build"
-    path: require("path").resolve("./build"),
+    path: path.resolve(__dirname,"build"),
     chunkFilename: "[name]-[hash].js"
   },
+   externals: {
+        "config": "$config"
+    },
   resolve: {
     alias: {
-      react: path.join(__dirname, "node_modules", "react"),
       styles: path.join(__dirname, "client", "styles"),
       engine: path.join(__dirname, "client", "js", "engine"),
       helpers: path.join(__dirname, "client", "js", "helpers"),
@@ -94,6 +86,6 @@ module.exports = {
       appcontext: path.join(__dirname, "client", "js", "appcontext"),
       datastore: path.join(__dirname, "client", "js", "datastore")
     },
-    extensions: ["", ".js", ".json"]
+    extensions: ["*",".js", ".json"]
   }
 };

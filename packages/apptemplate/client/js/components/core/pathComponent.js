@@ -3,10 +3,11 @@ import {Route} from 'react-router-dom';
 import R from 'ramda';
 export default class PathComponent extends Component {
 	render() {
-		let {pathname, exactly, component,...rest} = this.props;
+		debugger;
+		let {pathname, exactly=false, component,...rest} = this.props;
 		let Component = component;
 		return (<Route path={pathname}
-			exactly={exactly}
+			exact={exactly}
 			render={(props) => <Component mapContextToProps={
 				($context, $params) => {
 					return {...props,...rest }
@@ -15,3 +16,4 @@ export default class PathComponent extends Component {
 		);
 	}
 };
+

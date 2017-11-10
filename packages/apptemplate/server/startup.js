@@ -10,7 +10,6 @@ var readline = require("readline"),
   API=require("./API");
 
 var app;
-let loopback = require("loopback"), fs = require("fs");
 //loopback.createModel("Employee",{"name":{required:true}});
 
 function startExpress() {

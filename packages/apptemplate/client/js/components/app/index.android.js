@@ -7,12 +7,17 @@ import ContextConsumer from "components/core/contextconsumer";
 
 import $globals from "components/app/globals";
 import { navigateTo } from "actions/navigation";
+
+import { BrowserRouter } from "react-router-dom";
+import { ReactHistory } from "components/reacthistory";
 import { View, Text } from "react-native";
 import { List, ListItem, Icon, Button } from "native-base";
 import Drawer from "react-native-drawer";
 import { styles, tabStyles } from "components/core/styles";
 import { MediaQuery } from "react-native-responsive";
 import MyVacation from "components/app/areas/MyVacation";
+import Area2 from "components/app/areas/Area2";
+import Area3 from "components/app/areas/Area3";
 class App extends ContextOwner {
   openDrawer() {
     this._drawer.open();
@@ -30,6 +35,22 @@ class App extends ContextOwner {
         >
           <Text style={{ fontSize: 15, fontWeight: "bold", color: "white" }}>
             MyVacation
+          </Text>
+        </ListItem>
+        <ListItem
+          style={{ marginLeft: 0, backgroundColor: "rgb(51, 122, 183)" }}
+          onPress={this.navigate.bind(this, "/Area2")}
+        >
+          <Text style={{ fontSize: 15, fontWeight: "bold", color: "white" }}>
+            Area2
+          </Text>
+        </ListItem>
+        <ListItem
+          style={{ marginLeft: 0, backgroundColor: "rgb(51, 122, 183)" }}
+          onPress={this.navigate.bind(this, "/Area3")}
+        >
+          <Text style={{ fontSize: 15, fontWeight: "bold", color: "white" }}>
+            Area3
           </Text>
         </ListItem>
       </List>
@@ -63,6 +84,16 @@ class App extends ContextOwner {
               <PathComponent
                 pathname="/MyVacation"
                 component={MyVacation}
+                {...this.getContexts()}
+              />
+              <PathComponent
+                pathname="/Area2"
+                component={Area2}
+                {...this.getContexts()}
+              />
+              <PathComponent
+                pathname="/Area3"
+                component={Area3}
                 {...this.getContexts()}
               />
             </View>
@@ -113,6 +144,16 @@ class App extends ContextOwner {
                   <PathComponent
                     pathname="/MyVacation"
                     component={MyVacation}
+                    {...this.getContexts()}
+                  />
+                  <PathComponent
+                    pathname="/Area2"
+                    component={Area2}
+                    {...this.getContexts()}
+                  />
+                  <PathComponent
+                    pathname="/Area3"
+                    component={Area3}
                     {...this.getContexts()}
                   />
                 </View>

@@ -1,16 +1,17 @@
 {
   "name": "appbuilder",
   "version": "0.1.0",
-  "description": "demo", 
+  "description": "demo",
   "author": "Admin",
   "license": "ISC",
-  "dependencies": {
-  
-  },
+  "dependencies": {},
   "devDependencies": {
-  
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "directory-exists": "^1.0.2",
+    "kue-scheduler": "^0.7.4",
+    "ncp": "^2.0.0"
   },
- 
   "private": true,
   "workspaces": [
     "packages/*"

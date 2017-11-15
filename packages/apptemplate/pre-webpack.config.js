@@ -16,7 +16,7 @@ var webpack = require("webpack"),
     }),
     new webpack.DllReferencePlugin({
       context: ".",
-      manifest: require("./build/vendor-manifest.json")
+      manifest: require("./dist/pre-vendor-manifest.json")
     }),
     new ExtractTextPlugin({ filename: "styles.min.css", allChunks: true }),
     new webpack.HotModuleReplacementPlugin()
@@ -69,7 +69,7 @@ module.exports = {
   plugins: plugins,
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, "build"),
+    path: path.resolve(__dirname, "dist"),
     chunkFilename: "[name]-[hash].js"
   },
   externals: {

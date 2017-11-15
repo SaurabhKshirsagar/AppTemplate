@@ -4,10 +4,13 @@ directoryExists = require('directory-exists'),
 appsconfig = require("./appsconfig.js"),
 _ = require("lodash"),
 {appstatus}=require("./constant.js"),
-{writeFileToPath}=require("./writefiletopath.js");
+{writeFileToPath}=require("./writefiletopath.js"),
+
+webpack = require("webpack"),
+webpackDevServer=require("webpack-dev-server");
 
 let path=`${process.cwd()}\\packages\\`,
-setAppConfig=(name,app,newapp)=>{
+setAppConfig=(appname,app,newapp)=>{
     //New app 
     if(newapp){
         let portCount=appsconfig.portCount;
@@ -21,19 +24,19 @@ setAppConfig=(name,app,newapp)=>{
             resource
         }
         appsconfig.portCount=port;
-        appsconfig.apps[name]=_.cloneDeep(app)
+        appsconfig.apps[appname]=_.cloneDeep(app)
     }else{
         //check from changes 
     }
 },
-setAppStatus=(name,status,message)=>{
-    appsconfig.apps[name].status=status;
-    appsconfig.apps[name].message=message;
+setAppStatus=(appname,status,message)=>{
+    appsconfig.apps[appname].status=status;
+    appsconfig.apps[appname].message=message;
 
 },
-copyTemplate=(name)=>{
+copyTemplate=(appname)=>{
     return new Promise((res,rej)=>{
-        ncp(`${path}apptemplate`, `${path}${name}`, function (err) {
+        ncp(`${path}apptemplate`, `${path}${appname}`, function (err) {
             if (err) 
                 return rej("Fail to copy Tmplate")
             res("copied");
@@ -50,32 +53,43 @@ saveResourceToLocation=(appname,{resource},newapp)=>{
        console.log(`in saveResourceToLocation: ${appname}`)
     return Promise.all(files);
 },
-webpackBuild=(name,app,newapp)=>{
-    console.log(`in webpackBuild: ${name}`)
+createVendorBuild=(appname,app,newapp)=>{
+    let {port}=appsconfig.apps[appname];
+    let {buildVendorDll,webpackConfig,buildPreVendorDll,preWebpackConfig}= require(`${path}${appname}/buildApis`);
+    buildPreVendorDll().then(()=>{
+        preWebpackConfig.entry.javascript.unshift(`webpack-dev-server/client?http://localhost:${port}/`, "webpack/hot/dev-server");
+        var webpackCompiler = webpack(preWebpackConfig);
+        var server = new webpackDevServer(webpackCompiler, {
+        hot: true,
+         contentBase: `${path}${appname}/dist`
+        });
+        server.listen(port);
+    })
+    console.log(`in webpackBuild: ${appname}`)
     return Promise.resolve("");
 },
-startWebpackServer=(name,app,newapp)=>{
+startWebpackServer=(appname,app,newapp)=>{
     return Promise.resolve("");
 },
-update=(name,app)=>{
+update=(appname,app)=>{
  return new Promise((res,rej)=>{
-     if(directoryExists.sync(`${path}${name}`)){
-        console.log(`App for update : ${name}`)
+     if(directoryExists.sync(`${path}${appname}`)){
+        console.log(`App for update : ${appname}`)
      }
      else{
-        console.log(`Its new app : ${name}`)
-        setAppConfig(name,app,true);
-        copyTemplate(name)
-        .then(()=>saveResourceToLocation(name,app,true))
-        .then(()=>webpackBuild(name,app,true))
-        .then(()=>startWebpackServer(name,app,true))
+        console.log(`Its new app : ${appname}`)
+        setAppConfig(appname,app,true);
+        copyTemplate(appname)
+        .then(()=>saveResourceToLocation(appname,app,true))
+        .then(()=>createVendorBuild(appname,app,true))
+        .then(()=>startWebpackServer(appname,app,true))
         .then(()=>{
-            setAppStatus(name,appstatus.READY);
-             console.log(`Done: ${name}`)
+            setAppStatus(appname,appstatus.READY);
+             console.log(`Done: ${appname}`)
             return res("Done")
         })
         .catch((error)=>{
-            setAppStatus(name,appstatus.ERROR,error.message);
+            setAppStatus(appname,appstatus.ERROR,error.message);
             return rej(error)
         })
      }

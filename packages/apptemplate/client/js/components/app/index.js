@@ -7,45 +7,19 @@ import ContextConsumer from "components/core/contextconsumer";
 
 import $globals from "components/app/globals";
 import { navigateTo } from "actions/navigation";
-import { Button, FormGroup, ControlLabel, FormControl } from "react-bootstrap";
-import MyVacation from "components/app/areas/MyVacation";
-class App extends ContextOwner {
+
+import { BrowserRouter } from "react-router-dom";
+import { ReactHistory } from "components/reacthistory";
+
+import Area from "components/core/area";
+import Slide from "components/core/slide";
+import Button from "components/core/button";
+import TextBox from "components/core/textbox";
+
+class Area2 extends PathComponent {
+
   render() {
-    return (
-      <div>
-        <div
-          style={{
-            height: "8vh",
-            width: "100%",
-            backgroundColor: "#2196f3",
-            color: "white",
-            fontSize: "xx-large",
-          }}
-        >
-          p10
-        </div>
-        <div style={{ display: "flex" }}>
-          <div
-            style={{ height: "92vh", width: "15%", backgroundColor: "#337ab7" }}
-          >
-
-            <LinkToWrapper to="/MyVacation">
-              <Button className="btn btn-primary" style={{ width: "100%" }}>
-                MyVacation
-              </Button>
-            </LinkToWrapper>
-          </div>
-          <div style={{ height: "92vh", width: "85%", display: "flex" }}>
-
-            <PathComponent
-              pathname="/MyVacation"
-              component={MyVacation}
-              {...this.getContexts()}
-            />
-          </div>
-        </div>
-      </div>
-    );
+    return <div>Its App Template</div>
   }
 }
-export default ContextConsumer(App);
+export default ContextConsumer(Area2);

@@ -10,7 +10,8 @@
     "body-parser": "^1.18.2",
     "directory-exists": "^1.0.2",
     "kue-scheduler": "^0.7.4",
-    "ncp": "^2.0.0"
+    "ncp": "^2.0.0",
+    "webpack-dev-server": "^2.9.4"
   },
   "private": true,
   "workspaces": [

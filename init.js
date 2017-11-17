@@ -7,6 +7,7 @@ compression = require("compression"),
 boot=require('./helper/initqueue.js').bootBackendQueue()
 queue = require('./helper/queue.js'),
 config = require('./helper/config.js'),
+{preview}=  require('./helper/preview.js'),
 queueNames=config.queueNames,
 jobName=config.jobName;
 
@@ -28,7 +29,7 @@ function startExpress() {
   app.use(bodyParser.json({ limit: "50mb" }));
 
   //===================== API =============================
-  app.post("/apps/update/:appname",function(req,res){
+  app.post("/apps/:appname/update",function(req,res){
     let {params:{appname},body}=req;
     queue.createJob(queueNames.APP_BUILDER,jobName.UPDATE_APP,{name:appname,app:body})
     .then(jobid => {
@@ -37,9 +38,10 @@ function startExpress() {
     })
   })
 
-  app.get("*", function (req, res) {
-    res.sendFile(path.join(__dirname, "./index.html"));
-  });
+   app.get("/apps/:appname/preview",function(req,res){
+    let {params:{appname},body}=req;
+    preview(appname,req,res);
+  })
 //======================= API END ============================
 
   app.listen(app.get("port"));

@@ -1,39 +1,14 @@
 let ncp =require("ncp").ncp,
 Promise = require('bluebird'),
 directoryExists = require('directory-exists'),
-appsconfig = require("./appsconfig.js"),
+{getAppConfig,setAppStatus,setAppConfig} = require("./appsconfig.js"),
 _ = require("lodash"),
 {appstatus}=require("./constant.js"),
 {writeFileToPath}=require("./writefiletopath.js"),
-
 webpack = require("webpack"),
 webpackDevServer=require("webpack-dev-server");
 
 let path=`${process.cwd()}\\packages\\`,
-setAppConfig=(appname,app,newapp)=>{
-    //New app 
-    if(newapp){
-        let portCount=appsconfig.portCount;
-        let {_id,resource}=app;
-        let port = ++portCount;
-        app= {
-            _id,
-            status:appstatus.BUILDING,
-            port,
-            message:"",
-            resource
-        }
-        appsconfig.portCount=port;
-        appsconfig.apps[appname]=_.cloneDeep(app)
-    }else{
-        //check from changes 
-    }
-},
-setAppStatus=(appname,status,message)=>{
-    appsconfig.apps[appname].status=status;
-    appsconfig.apps[appname].message=message;
-
-},
 copyTemplate=(appname)=>{
     return new Promise((res,rej)=>{
         ncp(`${path}apptemplate`, `${path}${appname}`, function (err) {
@@ -54,14 +29,14 @@ saveResourceToLocation=(appname,{resource},newapp)=>{
     return Promise.all(files);
 },
 createVendorBuild=(appname,app,newapp)=>{
-    let {port}=appsconfig.apps[appname];
+    let {port}=getAppConfig().apps[appname];
     let {buildVendorDll,webpackConfig,buildPreVendorDll,preWebpackConfig}= require(`${path}${appname}/buildApis`);
     buildPreVendorDll().then(()=>{
         preWebpackConfig.entry.javascript.unshift(`webpack-dev-server/client?http://localhost:${port}/`, "webpack/hot/dev-server");
         var webpackCompiler = webpack(preWebpackConfig);
         var server = new webpackDevServer(webpackCompiler, {
-        hot: true,
-         contentBase: `${path}${appname}/dist`
+            hot: true,
+            contentBase: `${path}${appname}/dist`
         });
         server.listen(port);
     })
@@ -85,7 +60,7 @@ update=(appname,app)=>{
         .then(()=>startWebpackServer(appname,app,true))
         .then(()=>{
             setAppStatus(appname,appstatus.READY);
-             console.log(`Done: ${appname}`)
+            console.log(`Done: ${appname}`)
             return res("Done")
         })
         .catch((error)=>{

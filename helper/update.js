@@ -32,9 +32,12 @@ createVendorBuild=(appname,app,newapp)=>{
     let {port}=getAppConfig().apps[appname];
     let {buildVendorDll,webpackConfig,buildPreVendorDll,preWebpackConfig}= require(`${path}${appname}/buildApis`);
     buildPreVendorDll().then(()=>{
+        let baseUrl=`/apps/${appname}/preview/`;
         preWebpackConfig.entry.javascript.unshift(`webpack-dev-server/client?http://localhost:${port}/`, "webpack/hot/dev-server");
-        var webpackCompiler = webpack(preWebpackConfig);
-        var server = new webpackDevServer(webpackCompiler, {
+        preWebpackConfig.plugins[0].options.baseUrl=baseUrl;
+        preWebpackConfig.plugins[1].definitions.DEV_BASENAME=`"/apps\/${appname}/preview/"`;
+        let webpackCompiler = webpack(preWebpackConfig);
+        let server = new webpackDevServer(webpackCompiler, {
             hot: true,
             contentBase: `${path}${appname}/dist`
         });

@@ -14,6 +14,11 @@ var webpack = require("webpack"),
         minifyCSS: true
       }
     }),
+    new webpack.DefinePlugin({
+        PRODUCTION:false,
+        DEV_BASENAME: "",
+        PROD_BASENAME: "",
+    }),
     new webpack.DllReferencePlugin({
       context: ".",
       manifest: require("./dist/pre-vendor-manifest.json")

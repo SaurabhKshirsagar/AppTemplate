@@ -38,9 +38,9 @@ function startExpress() {
     })
   })
 
-   app.get("/apps/:appname/preview",function(req,res){
+   app.get("/apps/:appname/preview/*",function(req,res,next){
     let {params:{appname},body}=req;
-    preview(appname,req,res);
+    preview(appname,req,res,next);
   })
 //======================= API END ============================
 

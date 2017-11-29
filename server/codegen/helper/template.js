@@ -14,6 +14,8 @@ let reactDefaultTemplate = (componentName, renderBody, funContextVarsString) =>
     return `class App extends ContextOwner {
             render() {
                 return (
+                <BrowserRouter>
+                    <ReactHistory>
                     <div>
                         <div  style={{height:"8vh", width:"100%", backgroundColor:'#2196f3', color:'white',fontSize:'xx-large'}}>
                             p10
@@ -26,7 +28,9 @@ let reactDefaultTemplate = (componentName, renderBody, funContextVarsString) =>
                                 ${rightPanel}
                                 </div>                    
                         </div>
-                    </div>)
+                    </div>
+                    </ReactHistory>
+                </BrowserRouter>)
             }
         }
         export default ContextConsumer(App);`;

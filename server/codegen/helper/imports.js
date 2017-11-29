@@ -7,12 +7,14 @@ let componentImports = {
   
   defaultImports = `import React from "react";
   import ReactDom from "react-dom";
-  import PathComponent from "components/core/pathComponent";
-  import ContextOwner from "components/core/contextowner";
-  import LinkToWrapper from "components/core/linktowrapper";
-  import ContextConsumer from "components/core/contextconsumer";
+  import {BrowserRouter} from 'react-router-dom';
 
-  import $globals from "components/app/globals";
-  import {navigateTo} from "actions/navigation";`;
+  import PathComponent from "p10-app-base_1_0/src/components/core/pathComponent";
+  import ContextOwner from "p10-app-base_1_0/src/components/core/contextowner";
+  import LinkToWrapper from "p10-app-base_1_0/src/components/core/linktowrapper";
+  import ContextConsumer from "p10-app-base_1_0/src/components/core/contextconsumer";
+  import {navigateTo} from "p10-app-base_1_0/src/actions/navigation";
+  import {ReactHistory} from "p10-app-base_1_0/src/components/reacthistory";`
+  
 
 module.exports={componentImports,defaultImports};

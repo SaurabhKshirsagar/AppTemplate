@@ -80,7 +80,7 @@ class WriteComponent {
       .reduce((prev, value, key) => {
         if(key!=null && key!="undefined"){
           let componetName=key.toLowerCase();
-          return `${prev} \r\nimport ${key} from "components/core/${componetName}"`
+          return `${prev} \r\nimport ${key} from "p10-app-base_1_0/src/components/core/${componetName}"`
         }
         return `${prev}`
       }, "");
@@ -90,7 +90,7 @@ class WriteComponent {
         if(key!=null && key!="undefined")
          {
           let componetName=key.toLowerCase();
-          return `${prev} \r\nimport ${key} from "components/core/${componetName}"`
+          return `${prev} \r\nimport ${key} from "p10-app-base_1_0/src/components/core/${componetName}"`
         }
         return `${prev}`
       }, "");

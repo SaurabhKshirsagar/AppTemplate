@@ -13,8 +13,8 @@ class writeDataStores{
                         return `${prev} ${key}:${value},`
                     },"")
         this.data=_.isObject(value)?JSON.stringify(value):[]
-        this.import = `import {DS} from "helpers/datastore"
-                      import adapter from "helpers/adaptor/modeladaptor";`;
+        this.import = `import {DS} from "p10-app-base_1_0/src/helpers/datastore"
+                      import adapter from "p10-app-base_1_0/src/helpers/adaptor/modeladaptor";`;
         
 
     }

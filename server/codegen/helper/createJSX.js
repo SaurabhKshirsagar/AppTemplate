@@ -113,7 +113,7 @@ let createJSX = jsonTree => {
     contextParams = `context: $context,params: $params,`;
   }
 
-  return `<${component} mapContextToProps={($context, $params) =>{return {
+  return `<${component} mapContextToProps={($context, $globals, $params) =>{return {
                                                                         ${contextParams}
                                                                         ${validationsStr}
                                                                         ${styleStr}

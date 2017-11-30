@@ -14,21 +14,23 @@ let reactDefaultTemplate = (componentName, renderBody, funContextVarsString) =>
     return `class App extends ContextOwner {
             render() {
                 return (
-                <BrowserRouter>
+                <BrowserRouter  basename={PRODUCTION ? PROD_BASENAME : DEV_BASENAME}>
                     <ReactHistory>
-                    <div>
-                        <div  style={{height:"8vh", width:"100%", backgroundColor:'#2196f3', color:'white',fontSize:'xx-large'}}>
-                            p10
-                        </div>
-                        <div  style={{display:"flex"}} >
-                            <div  style={{height:"92vh", width:"15%", backgroundColor:'#337ab7'}} > 
-                                ${leftPanel}
+                    <ConfigProvider globals={globals} DS={DS}>
+                        <div>
+                            <div  style={{height:"8vh", width:"100%", backgroundColor:'#2196f3', color:'white',fontSize:'xx-large'}}>
+                                p10
                             </div>
-                                <div style={{height:"92vh", width:"85%", display:"flex"}}> 
-                                ${rightPanel}
-                                </div>                    
+                            <div  style={{display:"flex"}} >
+                                <div  style={{height:"92vh", width:"15%", backgroundColor:'#337ab7'}} > 
+                                    ${leftPanel}
+                                </div>
+                                    <div style={{height:"92vh", width:"85%", display:"flex"}}> 
+                                    ${rightPanel}
+                                    </div>                    
+                            </div>
                         </div>
-                    </div>
+                    </ConfigProvider>
                     </ReactHistory>
                 </BrowserRouter>)
             }

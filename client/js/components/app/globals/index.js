@@ -1,2 +1,4 @@
-let $globals = {};
+let $globals = {
+  username: "saurabh",
+};
 export default $globals;

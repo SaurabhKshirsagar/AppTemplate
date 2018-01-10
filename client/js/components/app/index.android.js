@@ -1,18 +1,24 @@
 import React from "react";
 import ReactDom from "react-dom";
-import PathComponent from "components/core/pathComponent";
-import ContextOwner from "components/core/contextowner";
-import LinkToWrapper from "components/core/linktowrapper";
-import ContextConsumer from "components/core/contextconsumer";
-
-import $globals from "components/app/globals";
-import { navigateTo } from "actions/navigation";
+import { BrowserRouter } from "react-router-dom";
+import globals from "components/app/globals";
+import DS from "datastore";
+import PathComponent from "p10-app-base_1_0/src/components/core/pathComponent";
+import ConfigProvider
+  from "p10-app-base_1_0/src/components/core/configprovider";
+import ContextOwner from "p10-app-base_1_0/src/components/core/contextowner";
+import LinkToWrapper from "p10-app-base_1_0/src/components/core/linktowrapper";
+import ContextConsumer
+  from "p10-app-base_1_0/src/components/core/contextconsumer";
+import { navigateTo } from "p10-app-base_1_0/src/actions/navigation";
+import { ReactHistory } from "p10-app-base_1_0/src/components/reacthistory";
 import { View, Text } from "react-native";
 import { List, ListItem, Icon, Button } from "native-base";
 import Drawer from "react-native-drawer";
 import { styles, tabStyles } from "components/core/styles";
 import { MediaQuery } from "react-native-responsive";
 import MyVacation from "components/app/areas/MyVacation";
+import goals from "components/app/areas/goals";
 class App extends ContextOwner {
   openDrawer() {
     this._drawer.open();
@@ -30,6 +36,14 @@ class App extends ContextOwner {
         >
           <Text style={{ fontSize: 15, fontWeight: "bold", color: "white" }}>
             MyVacation
+          </Text>
+        </ListItem>
+        <ListItem
+          style={{ marginLeft: 0, backgroundColor: "rgb(51, 122, 183)" }}
+          onPress={this.navigate.bind(this, "/goals")}
+        >
+          <Text style={{ fontSize: 15, fontWeight: "bold", color: "white" }}>
+            goals
           </Text>
         </ListItem>
       </List>
@@ -63,6 +77,11 @@ class App extends ContextOwner {
               <PathComponent
                 pathname="/MyVacation"
                 component={MyVacation}
+                {...this.getContexts()}
+              />
+              <PathComponent
+                pathname="/goals"
+                component={goals}
                 {...this.getContexts()}
               />
             </View>
@@ -113,6 +132,11 @@ class App extends ContextOwner {
                   <PathComponent
                     pathname="/MyVacation"
                     component={MyVacation}
+                    {...this.getContexts()}
+                  />
+                  <PathComponent
+                    pathname="/goals"
+                    component={goals}
                     {...this.getContexts()}
                   />
                 </View>
